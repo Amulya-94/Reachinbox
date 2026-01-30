@@ -10,7 +10,10 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-        res.redirect('http://localhost:3000/dashboard');
+        const clientUrl = process.env.CLIENT_URL?.startsWith('http')
+            ? process.env.CLIENT_URL
+            : `https://${process.env.CLIENT_URL || 'localhost:3000'}`;
+        res.redirect(`${clientUrl}/dashboard`);
     }
 );
 
@@ -31,7 +34,10 @@ router.get('/mock', async (req, res, next) => {
         // Manually log the user in using Passport's req.login
         req.login(user, (err) => {
             if (err) return next(err);
-            return res.redirect('http://localhost:3000/dashboard');
+            const clientUrl = process.env.CLIENT_URL?.startsWith('http')
+                ? process.env.CLIENT_URL
+                : `https://${process.env.CLIENT_URL || 'localhost:3000'}`;
+            return res.redirect(`${clientUrl}/dashboard`);
         });
     } catch (error) {
         next(error);
