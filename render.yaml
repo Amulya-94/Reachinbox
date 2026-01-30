@@ -25,13 +25,11 @@ services:
         fromService:
           type: web
           name: reachinbox-web
-          envVar: RENDER_EXTERNAL_URL
-      # Google OAuth Credentials (You must enter these in dashboard)
+          property: host
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
-      # Ethereal Email (Auto-generated if empty, or set your own)
       - key: ETHEREAL_USER
         sync: false
       - key: ETHEREAL_PASS
@@ -52,24 +50,21 @@ services:
         fromService:
           type: web
           name: reachinbox-server
-          envVar: RENDER_EXTERNAL_URL
+          property: host
+
+  # ---------------------------------------------------
+  # 3. Redis Instance
+  # ---------------------------------------------------
+  - type: redis
+    name: reachinbox-redis
+    plan: free
+    ipAllowList: [] # Access only from internal services
 
 databases:
   # ---------------------------------------------------
-  # 3. PostgreSQL Database
+  # 4. PostgreSQL Database
   # ---------------------------------------------------
   - name: reachinbox-db
     plan: free
     databaseName: reachinbox
     user: reachinbox_user
-
-# ---------------------------------------------------
-# 4. Redis Instance
-# ---------------------------------------------------
-# Note: Render Free Tier does not support persistent Redis via YAML officially in all regions, 
-# but this is the standard definition. If unavailable, creating manually via dashboard is an option.
-services:
-  - type: redis
-    name: reachinbox-redis
-    plan: free
-    ipAllowList: [] # Access only from internal services
