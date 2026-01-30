@@ -27,14 +27,17 @@ This project is a full-stack application designed to schedule and send emails at
 
 The system follows a producer-consumer pattern:
 
-```mermaid
-flowchart TD
-    A[Client (Next.js)] -->|"POST /schedule"| B(Express API)
-    B -->|"Create Job"| C[(PostgreSQL DB)]
-    B -->|"Add Job"| D[[Redis Queue (BullMQ)]]
-    D -->|"Process Job"| E[Worker Service]
-    E -->|"Send Mail"| F{SMTP Provider}
-    E -->|"Update Status"| C
+```text
+[Client (Next.js)] -- POST /schedule --> [Express API]
+       |
+       | Create Job
+       v
+[(PostgreSQL DB)] <--- Update Status --- [Worker Service]
+       ^                                      |
+       |                                      | Process Job
+       | Add Job                              |
+       |                                      v
+[[Redis Queue (BullMQ)]] ------------> [Worker Service] -- Send Mail --> {SMTP Provider}
 ```
 
 ## 🛠️ Tech Stack
